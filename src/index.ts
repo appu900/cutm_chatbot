@@ -7,14 +7,14 @@ app.use(bodyParser.json());
 
 // Replace with your actual WhatsApp API token and WhatsApp number ID
 const accessToken =
-  "EAAHiMA9Pw4ABO80uGfZAcJz6gEAmGKiyVKJz5ZAs5Avoy6hGitM330vuGNZCP5tnBZCRXe7YyCNPXvhyznJOhqx16dgeyYMib19oo0xiZAx2sU1T2xbnCD1R1GkiPeBypCsatYogtZAePM2cEjugFQ7be1cg7oHNkon7fZAGhnQiB9yG56ldN2mlRZCK32YtEZBC68Qo31PakPgAEjpduYZB1mC5dlyhotZACtlm7h1PHZAaIGkZD";
-const whatsappPhoneNumberId = "530171019903872";
+  "EAAHiMA9Pw4ABO0i3MYkSTPesXgUXZAxpZBDrZCddTnB5kHJtgCCgr1GZANZAfzCir6hLELTv9h4gphcf2iVd7nxxSpkyMzGWZAGSUxGlKLLfwSHOKx9QDjZCZAFWtTfNnFlSuBW8CbSdynHTCiJtu7OUw3rLTynsfROj1gleOU70AouG04jimQYnhJCL4K0Vr0CqFQVmZAcVqAoj4VluNtwOojbzWvQcZD";
+const whatsappPhoneNumberId = "512579385264516";
 
 // Helper function to send messages
 async function sendMessage(to: string, text: string) {
   try {
     await axios.post(
-      `https://graph.facebook.com/v13.0/${whatsappPhoneNumberId}/messages`,
+      `https://graph.facebook.com/v20.0/${whatsappPhoneNumberId}/messages`,
       {
         messaging_product: "whatsapp",
         to,
@@ -31,6 +31,45 @@ async function sendMessage(to: string, text: string) {
     console.error("Error sending message:", error);
   }
 }
+
+// ** send template locally test
+async function sendTemplateMessage(to: any) {
+  try {
+    const response = await axios.post(
+      `https://graph.facebook.com/v20.0/${whatsappPhoneNumberId}/messages`,
+      {
+        messaging_product: "whatsapp",
+        to,
+        type: "template",
+        template: {
+          name: "hello_world",
+          language: { code: "en_US" },
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response;
+
+  } catch (error: any) {
+    console.error("Error sending message:", error.response?.data || error);
+  }
+}
+
+app.post("/hello-template", async (req: any, res: any) => {
+  try {
+    const response = await sendTemplateMessage(req.body.to);
+    res.status(200).json({ data: response?.data });
+  } catch (error: any) {
+    res.status(400).json({
+      error: error.message,
+    });
+  }
+});
 
 // Webhook to receive messages
 app.post("/webhook", async (req: any, res: any) => {
@@ -77,7 +116,7 @@ app.get("/webhook", (req: Request, res: Response) => {
   }
 });
 
-const PORT = 3000;
+const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

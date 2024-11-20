@@ -1,193 +1,3 @@
-// import express, { Request, Response } from "express";
-// import axios from "axios";
-// import bodyParser from "body-parser";
-//
-// const app = express();
-// app.use(bodyParser.json());
-//
-// // Replace with your actual WhatsApp API token and WhatsApp number ID
-// const accessToken =
-//   "EAAHiMA9Pw4ABO4d3de1oghtJnpcPdkDJZBdtygwZABiSzmjx6ZB1mEF2SWGnUT71WCdA0t3N8gWzzb87tVqyCAatExpe4F2ytxjfQxsJI1qiIU8HpsnpbXYxEhqTNArOe86B8L2Y4KMKuwLNOLB4oZCvdpCCqE7AcJjUb5PN1qfiHLo6Cf9jpUq2SKj1v6B3FQZDZD";
-// const whatsappPhoneNumberId = "512579385264516";
-//
-// // Helper function to send messages
-// async function sendMessage(to: string, text: string) {
-//   try {
-//     await axios.post(
-//       `https://graph.facebook.com/v20.0/${whatsappPhoneNumberId}/messages`,
-//       {
-//         messaging_product: "whatsapp",
-//         to,
-//         text: { body: text },
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-//   } catch (error) {
-//     console.error("Error sending message:", error);
-//   }
-// }
-//
-//
-//
-// // send UserType selection
-//
-// async function sendUserTypeSelection(to : string){
-//   try {
-//     await axios.post(
-//         `https://graph.facebook.com/v21.0/${whatsappPhoneNumberId}/messages`,
-//         {
-//           messaging_product: "whatsapp",
-//           to,
-//           type: "interactive",
-//           interactive: {
-//             type: "button",
-//             body: {
-//               text: "Please select your role:"
-//             },
-//             action: {
-//               buttons: [
-//                 {
-//                   type: "reply",
-//                   reply: {
-//                     id: "PARENT",
-//                     title: "Parent"
-//                   }
-//                 },
-//                 {
-//                   type: "reply",
-//                   reply: {
-//                     id: "FACULTY",
-//                     title: "Faculty"
-//                   }
-//                 },
-//                 {
-//                   type: "reply",
-//                   reply: {
-//                     id: "ENQUIRY",
-//                     title: "General Enquiry"
-//                   }
-//                 }
-//               ]
-//             }
-//           }
-//         },
-//         {
-//           headers: {
-//             Authorization: `Bearer ${accessToken}`,
-//             "Content-Type": "application/json",
-//           }
-//         }
-//     );
-//   } catch (error) {
-//     console.error("Error sending interactive message:", error);
-//     throw error;
-//   }
-// }
-//
-//
-//
-//
-//
-//
-//
-//
-// // ** send template locally test
-// async function sendTemplateMessage(to: any) {
-//   try {
-//     const response = await axios.post(
-//       `https://graph.facebook.com/v20.0/${whatsappPhoneNumberId}/messages`,
-//       {
-//         messaging_product: "whatsapp",
-//         to,
-//         type: "template",
-//         template: {
-//           name: "welcome_message_introduction",
-//           language: { code: "en_US" },
-//         },
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${accessToken}`,
-//           "Content-Type": "application/json",
-//         },
-//       }
-//     );
-//     return response;
-//
-//   } catch (error: any) {
-//     console.error("Error sending message:", error.response?.data || error);
-//   }
-// }
-//
-// app.post("/hello-template", async (req: any, res: any) => {
-//   try {
-//     const response = await sendTemplateMessage(req.body.to);
-//     res.status(200).json({ data: response?.data });
-//   } catch (error: any) {
-//     res.status(400).json({
-//       error: error.message,
-//     });
-//   }
-// });
-//
-// // Webhook to receive messages
-// app.post("/webhook", async (req: any, res: any) => {
-//   const message = req.body.entry?.[0].changes?.[0].value.messages?.[0];
-//   const from = message?.from;
-//   const text = message?.text?.body?.toLowerCase();
-//
-//   console.log(text);
-//
-//   if (!from || !text) {
-//     return res.sendStatus(400); // Missing expected fields
-//   }
-//
-//   // Simple bot flow
-//   if (text === "hi" || text === "hello") {
-//     await sendMessage(from, "Hello! Please provide your employee ID:");
-//   } else if (/^\d{3,}$/.test(text)) {
-//     await sendMessage(from, "Got it! Now, please type your OTP (dummy).");
-//   } else if (text === "1234") {
-//     // Dummy OTP
-//     await sendMessage(
-//       from,
-//       "Welcome to the service! How can we assist you today?"
-//     );
-//   } else {
-//     await sendMessage(
-//       from,
-//       "I'm sorry, I didn't understand that. Please start with 'Hi' or 'Hello'."
-//     );
-//   }
-//
-//   res.sendStatus(200);
-// });
-//
-// // Endpoint for WhatsApp webhook verification
-// app.get("/webhook", (req: Request, res: Response) => {
-//   const verifyToken = "temptokencenturionuniversity1234";
-//   const mode = req.query["hub.mode"];
-//   const token = req.query["hub.verify_token"];
-//   const challenge = req.query["hub.challenge"];
-//
-//   if (mode === "subscribe" && token === verifyToken) {
-//     console.log("webhook verifyed sucessfully")
-//     res.status(200).send(challenge);
-//   } else {
-//     res.sendStatus(403);
-//   }
-// });
-//
-// const PORT = 3000;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
-
 import express, { Request, Response } from "express";
 import axios from "axios";
 import bodyParser from "body-parser";
@@ -195,196 +5,328 @@ import bodyParser from "body-parser";
 const app = express();
 app.use(bodyParser.json());
 
-const accessToken = "EAAHiMA9Pw4ABO4d3de1oghtJnpcPdkDJZBdtygwZABiSzmjx6ZB1mEF2SWGnUT71WCdA0t3N8gWzzb87tVqyCAatExpe4F2ytxjfQxsJI1qiIU8HpsnpbXYxEhqTNArOe86B8L2Y4KMKuwLNOLB4oZCvdpCCqE7AcJjUb5PN1qfiHLo6Cf9jpUq2SKj1v6B3FQZDZD";
-const whatsappPhoneNumberId = "512579385264516";
-const verifyToken = "temptokencenturionuniversity1234";
+
+// Configuration
+const config = {
+  accessToken: "EAAHiMA9Pw4ABO4d3de1oghtJnpcPdkDJZBdtygwZABiSzmjx6ZB1mEF2SWGnUT71WCdA0t3N8gWzzb87tVqyCAatExpe4F2ytxjfQxsJI1qiIU8HpsnpbXYxEhqTNArOe86B8L2Y4KMKuwLNOLB4oZCvdpCCqE7AcJjUb5PN1qfiHLo6Cf9jpUq2SKj1v6B3FQZDZD",
+  whatsappPhoneNumberId: "512579385264516",
+  verifyToken: "temptokencenturionuniversity1234", // Used for webhook verification
+  apiVersion: "v21.0"
+};
 
 // Templates configuration
 const templates = {
   WELCOME: "welcome_message_introduction",
-  FACULTY: "faculty",
-  PARENT: "parent",
-  ENQUIRY: "enquiry_about_university",
-  PROGRAM: "programme_structure"
+  FACULTY: "faculty_template",
+  PARENT: "parent_template",
+  ENQUIRY: "general_enquiry",
+  PROGRAMS: "programs_info"
 };
 
+// Interface definitions
 interface UserSession {
   stage: 'INITIAL' | 'USER_TYPE_SELECTION' | 'FACULTY_FLOW' | 'PARENT_FLOW' | 'ENQUIRY_FLOW';
   userType?: 'PARENT' | 'FACULTY' | 'ENQUIRY';
-  lastTemplate?: string;
+  phoneNumber: string;
+  lastInteraction: Date;
 }
 
+// Session management
 const userSessions = new Map<string, UserSession>();
 
-// Send template message
+// Logging middleware
+app.use((req, _, next) => {
+  console.log('\n=== Incoming Request ===');
+  console.log('Timestamp:', new Date().toISOString());
+  console.log('Method:', req.method);
+  console.log('Path:', req.path);
+  console.log('Headers:', JSON.stringify(req.headers, null, 2));
+  console.log('Body:', JSON.stringify(req.body, null, 2));
+  next();
+});
+
+// Helper function to send template messages
 async function sendTemplateMessage(to: string, templateName: string) {
   try {
-    console.log(`Sending template ${templateName} to ${to}`);
+    console.log(`Sending template "${templateName}" to ${to}`);
+
+    const payload = {
+      messaging_product: "whatsapp",
+      to: to,
+      type: "template",
+      template: {
+        name: templateName,
+        language: {
+          code: "en_US"
+        }
+      }
+    };
+
     const response = await axios.post(
-        `https://graph.facebook.com/v21.0/${whatsappPhoneNumberId}/messages`,
-        {
-          messaging_product: "whatsapp",
-          to,
-          type: "template",
-          template: {
-            name: templateName,
-            language: { code: "en_US" }
-          }
-        },
+        `https://graph.facebook.com/${config.apiVersion}/${config.whatsappPhoneNumberId}/messages`,
+        payload,
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
+            'Authorization': `Bearer ${config.accessToken}`,
+            'Content-Type': 'application/json'
           }
         }
     );
-    console.log('Template sent successfully:', response.data);
-    return response;
+
+    console.log('Template message sent successfully:', response.data);
+    return response.data;
   } catch (error: any) {
-    console.error("Error sending template:", error.response?.data || error);
+    console.error('Error sending template message:');
+    console.error('Status:', error.response?.status);
+    console.error('Response:', error.response?.data);
     throw error;
   }
 }
 
-// Send interactive button message
+// Helper function to send interactive buttons
 async function sendUserTypeSelection(to: string) {
   try {
-    console.log('Sending user type selection buttons to:', to);
-    await axios.post(
-        `https://graph.facebook.com/v21.0/${whatsappPhoneNumberId}/messages`,
-        {
-          messaging_product: "whatsapp",
-          to,
-          type: "interactive",
-          interactive: {
-            type: "button",
-            body: {
-              text: "Please select your role:"
-            },
-            action: {
-              buttons: [
-                {
-                  type: "reply",
-                  reply: {
-                    id: "PARENT",
-                    title: "Parent"
-                  }
-                },
-                {
-                  type: "reply",
-                  reply: {
-                    id: "FACULTY",
-                    title: "Faculty"
-                  }
-                }
-              ]
-            }
-          }
+    const payload = {
+      messaging_product: "whatsapp",
+      to: to,
+      type: "interactive",
+      interactive: {
+        type: "button",
+        body: {
+          text: "Please select your role:"
         },
+        action: {
+          buttons: [
+            {
+              type: "reply",
+              reply: {
+                id: "PARENT",
+                title: "Parent"
+              }
+            },
+            {
+              type: "reply",
+              reply: {
+                id: "FACULTY",
+                title: "Faculty"
+              }
+            },
+            {
+              type: "reply",
+              reply: {
+                id: "ENQUIRY",
+                title: "General Enquiry"
+              }
+            }
+          ]
+        }
+      }
+    };
+
+    const response = await axios.post(
+        `https://graph.facebook.com/${config.apiVersion}/${config.whatsappPhoneNumberId}/messages`,
+        payload,
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
+            'Authorization': `Bearer ${config.accessToken}`,
+            'Content-Type': 'application/json'
           }
         }
     );
-    console.log('Interactive buttons sent successfully');
-  } catch (error) {
-    console.error("Error sending interactive message:", error);
+
+    console.log('Interactive message sent successfully:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error sending interactive message:', error);
     throw error;
   }
 }
 
-// Webhook to receive messages
-app.post("/webhook", async (req: any, res: any) => {
+// Helper function to send text messages
+async function sendTextMessage(to: string, text: string) {
   try {
-    console.log('Received webhook payload:', JSON.stringify(req.body, null, 2));
+    const response = await axios.post(
+        `https://graph.facebook.com/${config.apiVersion}/${config.whatsappPhoneNumberId}/messages`,
+        {
+          messaging_product: "whatsapp",
+          to: to,
+          text: { body: text }
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${config.accessToken}`,
+            'Content-Type': 'application/json'
+          }
+        }
+    );
 
+    console.log('Text message sent successfully:', response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error('Error sending text message:', error);
+    throw error;
+  }
+}
+
+// Webhook verification endpoint
+app.get('/webhook', (req: Request, res: Response) => {
+  console.log('Received webhook verification request');
+
+  const mode = req.query['hub.mode'];
+  const token = req.query['hub.verify_token'];
+  const challenge = req.query['hub.challenge'];
+
+  console.log('Verification params:', { mode, token, challenge });
+
+  if (mode === 'subscribe' && token === config.verifyToken) {
+    console.log('Webhook verified successfully');
+    res.status(200).send(challenge);
+  } else {
+    console.error('Webhook verification failed');
+    res.sendStatus(403);
+  }
+});
+
+// Main webhook endpoint for receiving messages
+app.post('/webhook', async (req: any, res: any) => {
+  try {
+    console.log('\n=== Processing Webhook POST ===');
+
+    // Extract the message data
     const entry = req.body.entry?.[0];
     const change = entry?.changes?.[0];
     const value = change?.value;
     const message = value?.messages?.[0];
 
     if (!message) {
-      console.log('No message in webhook');
+      console.log('No message in webhook payload');
       return res.sendStatus(200);
     }
 
-    const from = message.from;
+    const from = message.from; // User's phone number
     const messageType = message.type;
-    console.log(`Received message type: ${messageType} from: ${from}`);
+
+    console.log('Processing message:', {
+      from,
+      type: messageType,
+      timestamp: new Date().toISOString()
+    });
 
     // Get or create user session
-    let session = userSessions.get(from) || { stage: 'INITIAL' };
-    console.log('Current session:', session);
+    let session = userSessions.get(from) || {
+      stage: 'INITIAL',
+      phoneNumber: from,
+      lastInteraction: new Date()
+    };
 
+    // Process different message types
     if (messageType === 'text') {
       const text = message.text.body.toLowerCase();
-      console.log('Received text message:', text);
+      console.log('Received text:', text);
 
       if (text === 'hi' || text === 'hello') {
-        console.log('Sending welcome flow');
         await sendTemplateMessage(from, templates.WELCOME);
         await sendUserTypeSelection(from);
         session.stage = 'USER_TYPE_SELECTION';
+      } else {
+        await sendTextMessage(from, "I'm sorry, I don't understand that message. Please say 'hi' or 'hello' to start.");
       }
     }
     else if (messageType === 'interactive') {
-      const interactiveType = message.interactive?.type;
       const buttonReply = message.interactive?.button_reply;
 
-      console.log('Received interactive message:', {
-        type: interactiveType,
-        reply: buttonReply
-      });
-
-      if (interactiveType === 'button_reply' && buttonReply) {
+      if (buttonReply) {
         const selectedOption = buttonReply.id;
-        console.log('Selected option:', selectedOption);
+        console.log('Button selected:', selectedOption);
 
         switch (selectedOption) {
           case 'PARENT':
-            console.log('Sending parent template');
             await sendTemplateMessage(from, templates.PARENT);
             session.stage = 'PARENT_FLOW';
-            session.userType = 'PARENT';
+            if ("userType" in session) {
+              session.userType = 'PARENT';
+            }
             break;
 
           case 'FACULTY':
-            console.log('Sending faculty template');
             await sendTemplateMessage(from, templates.FACULTY);
             session.stage = 'FACULTY_FLOW';
-            session.userType = 'FACULTY';
+            if ("userType" in session) {
+              session.userType = 'FACULTY';
+            }
             break;
+
+          case 'ENQUIRY':
+            await sendTemplateMessage(from, templates.ENQUIRY);
+            session.stage = 'ENQUIRY_FLOW';
+            if ("userType" in session) {
+              session.userType = 'ENQUIRY';
+            }
+            break;
+
         }
       }
     }
 
     // Update session
+    session.lastInteraction = new Date();
     userSessions.set(from, session);
-    console.log('Updated session:', session);
 
+    console.log('Updated session:', session);
     res.sendStatus(200);
+
   } catch (error) {
-    console.error("Error processing webhook:", error);
+    console.error('Error processing webhook:', error);
     res.sendStatus(500);
   }
 });
 
-// Webhook verification endpoint
-app.get("/webhook", (req: Request, res: Response) => {
-  const mode = req.query["hub.mode"];
-  const token = req.query["hub.verify_token"];
-  const challenge = req.query["hub.challenge"];
+// Session cleanup (run every hour)
+setInterval(() => {
+  const hour = 60 * 60 * 1000;
+  const now = new Date();
 
-  if (mode === "subscribe" && token === verifyToken) {
-    res.status(200).send(challenge);
-  } else {
-    res.sendStatus(403);
+  for (const [phoneNumber, session] of userSessions.entries()) {
+    if (now.getTime() - session.lastInteraction.getTime() > hour) {
+      userSessions.delete(phoneNumber);
+      console.log(`Cleaned up inactive session for ${phoneNumber}`);
+    }
   }
+}, 60 * 60 * 1000);
+
+
+
+// testing endpoint
+
+
+app.get("/pingme",(req:any,res:any)=>{
+    return res.status(200).send('OK');
+})
+
+// Error handling middleware
+app.use((err: Error, req: Request, res: Response, next: any) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({
+    error: 'Internal server error',
+    message: process.env.NODE_ENV === 'development' ? err.message : undefined
+  });
 });
 
-const PORT = 3000;
+// Start server
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`\n=== WhatsApp Chatbot Server ===`);
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Webhook URL should be: https://your-domain.com/webhook`);
+
+  // Configuration validation
+  if (!config.accessToken || config.accessToken === 'YOUR_ACCESS_TOKEN') {
+    console.error('WARNING: Access token not configured!');
+  }
+  if (!config.whatsappPhoneNumberId || config.whatsappPhoneNumberId === 'YOUR_PHONE_NUMBER_ID') {
+    console.error('WARNING: WhatsApp Phone Number ID not configured!');
+  }
+  if (!config.verifyToken || config.verifyToken === 'YOUR_VERIFY_TOKEN') {
+    console.error('WARNING: Verify token not configured!');
+  }
 });

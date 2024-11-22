@@ -206,10 +206,14 @@ app.post("/webhook", async (req: any, res: any) => {
     const value = change?.value;
     const message = value?.messages?.[0];
 
+
+
     if (!message) {
       console.log("No message in webhook payload");
       return res.sendStatus(200);
     }
+
+    console.log("Received message:", message);
 
     const from = message.from; // User's phone number
     const messageType = message.type;

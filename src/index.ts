@@ -20,8 +20,8 @@ const config = {
 // Templates configuration
 const templates = {
   WELCOME: "welcome_message_introduction",
-  FACULTY: "faculty_template",
-  PARENT: "parent_template",
+  FACULTY: "faculty",
+  PARENT: "parent",
   ENQUIRY: "general_enquiry",
   PROGRAMS: "programs_info",
 };

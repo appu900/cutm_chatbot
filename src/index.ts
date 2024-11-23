@@ -65,7 +65,7 @@ async function sendTemplateMessage(to: string, templateName: string) {
       template: {
         name: templateName,
         language: {
-          code: "en_US",
+          code: "en",
         },
       },
     };

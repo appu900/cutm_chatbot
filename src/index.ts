@@ -19,9 +19,9 @@ const config = {
 
 // Templates configuration
 const templates = {
-  WELCOME: "welcome_message_introduction",
+  WELCOME: "hello_world",
   FACULTY: "faculty",
-  PARENT: "parent",
+  PARENT: "parents",
   ENQUIRY: "enquiry_about_university",
   PROGRAMS: "programs_info",
 };
@@ -326,8 +326,8 @@ app.post("/webhook", async (req: any, res: any) => {
 
         switch (selectedOption) {
           case "PARENT":
-            // await sendTemplateMessageParent(from, templates.PARENT);
-            await sendWhatsAppMessageToParent(from);
+            await sendTemplateMessage(from, templates.PARENT);
+            //await sendWhatsAppMessageToParent(from);
             session.stage = "PARENT_FLOW";
             if ("userType" in session) {
               session.userType = "PARENT";

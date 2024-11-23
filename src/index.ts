@@ -126,41 +126,6 @@ async function sendTemplateMessage(to: string, templateName: string) {
 }
 
 
-async function sendTemplateMessageParent(to: string, templateName: string) {
-      try {
-        console.log(`Sending template "${templateName}" to ${to}`);
-        const payload1 = {
-          messaging_product: "whatsapp",
-          to: to,
-          type: "template",
-          template: {
-            name: templateName,
-            language: {
-              code: "en",
-            },
-          },
-        };
-
-    const response = await axios.post(
-      `https://graph.facebook.com/${config.apiVersion}/${config.whatsappPhoneNumberId}/messages`,
-      payload1,
-      {
-        headers: {
-          Authorization: `Bearer ${config.accessToken}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    console.log("Template message sent successfully:", response.data);
-    return response.data;
-  } catch (error: any) {
-    console.error("Error sending template message:");
-    console.error("Status:", error.response?.status);
-    console.error("Response:", error.response?.data);
-    throw error;
-  }
-}
 
 // Helper function to send interactive buttons
 async function sendUserTypeSelection(to: string) {
@@ -392,6 +357,24 @@ app.use((err: Error, req: Request, res: Response, next: any) => {
     error: "Internal server error",
     message: process.env.NODE_ENV === "development" ? err.message : undefined,
   });
+});
+
+
+// sendTemplateMessage("917735041901",templates.PARENT)
+
+app.get("/test-parent-template/:phone", async (req: express.Request, res: express.Response) => {
+  try {
+    const phone = req.params.phone;
+    // debugLog("Test Parent Template Request", { phone });
+    const result = await sendTemplateMessage(phone,templates.ENQUIRY);
+    res.json({ success: true, result });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      details: error.response?.data
+    });
+  }
 });
 
 

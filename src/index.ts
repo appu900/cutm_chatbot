@@ -22,7 +22,7 @@ const templates = {
   WELCOME: "welcome_message_introduction",
   FACULTY: "faculty",
   PARENT: "parent",
-  ENQUIRY: "general_enquiry",
+  ENQUIRY: "enquiry_about_university",
   PROGRAMS: "programs_info",
 };
 

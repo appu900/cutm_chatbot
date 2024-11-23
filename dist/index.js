@@ -26,10 +26,10 @@ const config = {
 };
 // Templates configuration
 const templates = {
-    WELCOME: "welcome_message_introduction",
+    WELCOME: "hello_world",
     FACULTY: "faculty",
-    PARENT: "parent",
-    ENQUIRY: "general_enquiry",
+    PARENT: "parents",
+    ENQUIRY: "enquiry_about_university",
     PROGRAMS: "programs_info",
 };
 // Session management
@@ -43,6 +43,33 @@ app.use((req, _, next) => {
     console.log("Headers:", JSON.stringify(req.headers, null, 2));
     console.log("Body:", JSON.stringify(req.body, null, 2));
     next();
+});
+const sendWhatsAppMessageToParent = (from) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const url = `https://graph.facebook.com/${config.apiVersion}/${config.whatsappPhoneNumberId}/messages`;
+    const payload = {
+        messaging_product: "whatsapp",
+        to: from,
+        type: "template",
+        template: {
+            name: "parent",
+            language: {
+                code: "en",
+            },
+        },
+    };
+    try {
+        const response = yield axios_1.default.post(url, payload, {
+            headers: {
+                Authorization: `Bearer ${config.accessToken}`,
+                "Content-Type": "application/json",
+            },
+        });
+        console.log("Message sent successfully:", response.data);
+    }
+    catch (error) {
+        console.error("Error sending message:", ((_a = error.response) === null || _a === void 0 ? void 0 : _a.data) || error.message);
+    }
 });
 // Helper function to send template messages
 function sendTemplateMessage(to, templateName) {
@@ -221,6 +248,7 @@ app.post("/webhook", (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 switch (selectedOption) {
                     case "PARENT":
                         yield sendTemplateMessage(from, templates.PARENT);
+                        //await sendWhatsAppMessageToParent(from);
                         session.stage = "PARENT_FLOW";
                         if ("userType" in session) {
                             session.userType = "PARENT";
@@ -278,6 +306,23 @@ app.use((err, req, res, next) => {
         message: process.env.NODE_ENV === "development" ? err.message : undefined,
     });
 });
+// sendTemplateMessage("917735041901",templates.PARENT)
+app.get("/test-parent-template/:phone", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    try {
+        const phone = req.params.phone;
+        // debugLog("Test Parent Template Request", { phone });
+        const result = yield sendTemplateMessage(phone, templates.ENQUIRY);
+        res.json({ success: true, result });
+    }
+    catch (error) {
+        res.status(500).json({
+            success: false,
+            error: error.message,
+            details: (_a = error.response) === null || _a === void 0 ? void 0 : _a.data
+        });
+    }
+}));
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

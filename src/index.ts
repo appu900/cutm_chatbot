@@ -70,11 +70,33 @@ async function sendTemplateMessage(to: string, templateName: string) {
       },
     };
 
-    async function sendTemplateMessageParent(to: string, templateName: string) {
+    const response = await axios.post(
+      `https://graph.facebook.com/${config.apiVersion}/${config.whatsappPhoneNumberId}/messages`,
+      payload,
+      {
+        headers: {
+          Authorization: `Bearer ${config.accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    console.log("Template message sent successfully:", response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error sending template message:");
+    console.error("Status:", error.response?.status);
+    console.error("Response:", error.response?.data);
+    throw error;
+  }
+}
+
+
+async function sendTemplateMessageParent(to: string, templateName: string) {
       try {
         console.log(`Sending template "${templateName}" to ${to}`);
     
-        const payload = {
+        const payload1 = {
           messaging_product: "whatsapp",
           to: to,
           type: "template",
@@ -88,7 +110,7 @@ async function sendTemplateMessage(to: string, templateName: string) {
 
     const response = await axios.post(
       `https://graph.facebook.com/${config.apiVersion}/${config.whatsappPhoneNumberId}/messages`,
-      payload,
+      payload1,
       {
         headers: {
           Authorization: `Bearer ${config.accessToken}`,

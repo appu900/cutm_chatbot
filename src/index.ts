@@ -53,6 +53,40 @@ app.use((req, _, next) => {
   next();
 });
 
+
+
+const sendWhatsAppMessageToParent = async (from: string) => {
+  const url = `https://graph.facebook.com/${config.apiVersion}/${config.whatsappPhoneNumberId}/messages`;
+  const payload = {
+    messaging_product: "whatsapp",
+    to:from,
+    type: "template",
+    template: {
+      name: "parent",
+      language: {
+        code: "en",
+      },
+    },
+  };
+
+  try {
+    const response = await axios.post(url, payload, {
+      headers: {
+        Authorization: `Bearer ${config.accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("Message sent successfully:", response.data);
+  } catch (error:any) {
+    console.error("Error sending message:", error.response?.data || error.message);
+  }
+};
+
+
+
+
+
+
 // Helper function to send template messages
 async function sendTemplateMessage(to: string, templateName: string) {
   try {
@@ -95,7 +129,6 @@ async function sendTemplateMessage(to: string, templateName: string) {
 async function sendTemplateMessageParent(to: string, templateName: string) {
       try {
         console.log(`Sending template "${templateName}" to ${to}`);
-    
         const payload1 = {
           messaging_product: "whatsapp",
           to: to,
@@ -293,7 +326,8 @@ app.post("/webhook", async (req: any, res: any) => {
 
         switch (selectedOption) {
           case "PARENT":
-            await sendTemplateMessageParent(from, templates.PARENT);
+            // await sendTemplateMessageParent(from, templates.PARENT);
+            await sendWhatsAppMessageToParent(from);
             session.stage = "PARENT_FLOW";
             if ("userType" in session) {
               session.userType = "PARENT";

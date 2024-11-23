@@ -51,27 +51,11 @@ async function sendTemplateMessage(
     template: {
       name: templateName,
       language: {
-        code: "en_US",
+        code: "en",
       },
     },
   };
-}
 
-  async function sendTemplateMessageInner(
-    to: string,
-    templateName: string
-  ): Promise<void> {
-    const payload = {
-      messaging_product: "whatsapp",
-      to,
-      type: "template",
-      template: {
-        name: templateName,
-        language: {
-          code: "en",
-        },
-      },
-    };
 
     try {
       const response = await axios.post(
@@ -194,11 +178,11 @@ async function sendTemplateMessage(
           const selectedOption = buttonReply.id;
           switch (selectedOption) {
             case "PARENT":
-              await sendTemplateMessageInner(from, templates.PARENT);
+              await sendTemplateMessage(from, templates.PARENT);
               session.stage = "PARENT_FLOW";
               break;
             case "FACULTY":
-              await sendTemplateMessageInner(from, templates.FACULTY);
+              await sendTemplateMessage(from, templates.FACULTY);
               session.stage = "FACULTY_FLOW";
               break;
             case "ENQUIRY":
